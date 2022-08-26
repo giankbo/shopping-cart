@@ -87,15 +87,15 @@ const products = [
   };
   
   const Products = (props) => {
-    const [items, setItems] = React.useState(products);
-    const [cart, setCart] = React.useState([]);
-    const [total, setTotal] = React.useState(0);
+    const { useState } = React;
+    const [items, setItems] = useState(products);
+    const [cart, setCart] = useState([]);
+    const [total, setTotal] = useState(0);
 
     //  Fetch Data
-    const { Fragment, useState, useEffect, useReducer } = React;
-    const [query, setQuery] = useState("http://localhost:1337/products");
+    const [query, setQuery] = useState("http://localhost:1337/api/products");
     const [{ data, isLoading, isError }, doFetch] = useDataApi(
-      "http://localhost:1337/products",
+        "http://localhost:1337/api/products",
       {
         data: [],
       }
@@ -139,21 +139,21 @@ const products = [
     });
     let cartList = cart.map((item, index) => {
       return (
-        <Card key={index}>
-          <Card.Header>
-            <Accordion.Toggle as={Button} variant="link" eventKey={1 + index}>
-              {item.name}
-            </Accordion.Toggle>
-          </Card.Header>
-          <Accordion.Collapse
-            onClick={() => deleteCartItem(index)}
-            eventKey={1 + index}
-          >
-            <Card.Body>
-              $ {item.cost} from {item.country}
-            </Card.Body>
-          </Accordion.Collapse>
-        </Card>
+        <Accordion key={index}>
+            <Accordion.Item variant="link" eventKey={1 + index}>
+                <Accordion.Header>
+                    {item.name}
+                </Accordion.Header>
+                <Accordion.Body
+                    onClick={() => deleteCartItem(index)}
+                    eventKey={1 + index}
+                >
+                    <Card.Body>
+                    $ {item.cost} from {item.country}
+                    </Card.Body>
+            </Accordion.Body>
+            </Accordion.Item>
+        </Accordion>
       );
     });
   
@@ -179,8 +179,8 @@ const products = [
     };
     const restockProducts = (url) => {
       doFetch(url);
-      let newItems = data.map((item) => {
-        let { name, country, cost, instock } = item;
+      let newItems = data.data.map((item) => {
+        let { name, country, cost, instock } = item.attributes;
         return { name, country, cost, instock };
       });
       setItems([...items, ...newItems]);
@@ -206,7 +206,7 @@ const products = [
         <Row>
           <form
             onSubmit={(event) => {
-              restockProducts(`http://localhost:1337/${query}`);
+              restockProducts(`http://localhost:1337/api/${query}`);
               console.log(`Restock called on ${query}`);
               event.preventDefault();
             }}
