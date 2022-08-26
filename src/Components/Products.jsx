@@ -1,3 +1,16 @@
+import React from "react";
+import axios from "axios";
+import {
+    Card,
+    Accordion,
+    Button,
+    Container,
+    Row,
+    Col,
+    Image,
+    Input,
+  } from "react-bootstrap";
+
 // sumulate getting products from DataBase
 const products = [
     { name: "Apples_:", country: "Italy", cost: 3, instock: 10 },
@@ -7,7 +20,6 @@ const products = [
   ];
   //=========Cart=============
   const Cart = (props) => {
-    const { Card, Accordion, Button } = ReactBootstrap;
     let data = props.location.data ? props.location.data : products;
     console.log(`data:${JSON.stringify(data)}`);
   
@@ -78,16 +90,7 @@ const products = [
     const [items, setItems] = React.useState(products);
     const [cart, setCart] = React.useState([]);
     const [total, setTotal] = React.useState(0);
-    const {
-      Card,
-      Accordion,
-      Button,
-      Container,
-      Row,
-      Col,
-      Image,
-      Input,
-    } = ReactBootstrap;
+
     //  Fetch Data
     const { Fragment, useState, useEffect, useReducer } = React;
     const [query, setQuery] = useState("http://localhost:1337/products");
@@ -219,6 +222,5 @@ const products = [
       </Container>
     );
   };
-  // ========================================
-  ReactDOM.render(<Products />, document.getElementById("root"));
-  
+
+  export default Products;
