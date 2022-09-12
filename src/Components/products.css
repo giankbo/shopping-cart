@@ -1,0 +1,45 @@
+html {
+    background-color: #f8f9fa;
+}
+
+h1 {
+    color: #50C594;
+    margin: 0.5rem;
+}
+
+h3 {
+    color: #2c3e50;
+}
+
+h5 {
+    color: #2c3e50;
+}
+
+h1, h3, h5 {
+    text-align: center;
+}
+
+ul {
+    list-style-type: none;
+}
+
+#cart-container {
+    border-radius: 1rem;
+    padding: 0.5rem 2rem 0.5rem 2rem;
+}
+
+#cart-row {
+    margin-top: 1rem;
+}
+
+#cart-col {
+    background: linear-gradient(to right, #4ac29a, #bdfff3);
+    border-radius: 1rem;
+    margin: 0.25rem;
+}
+
+#cart-button {
+    background-color: #50C594;
+    border: none;
+    margin: 0.25rem;
+}
