@@ -8,23 +8,29 @@ import {
     Row,
     Col,
     Image,
-    Input,
+    CloseButton,
+    Form,
   } from "react-bootstrap";
+  import 'bootstrap/dist/css/bootstrap.css';
+  import './products.css'
 
 // sumulate getting products from DataBase
 const products = [
-    { name: "Apples_:", country: "Italy", cost: 3, instock: 10 },
+    { name: "Apples :", country: "Italy", cost: 3, instock: 10 },
     { name: "Oranges:", country: "Spain", cost: 4, instock: 3 },
-    { name: "Beans__:", country: "USA", cost: 2, instock: 5 },
+    { name: "Beans  :", country: "USA", cost: 2, instock: 5 },
     { name: "Cabbage:", country: "USA", cost: 1, instock: 8 },
   ];
   //=========Cart=============
+  // not used
+  /*
   const Cart = (props) => {
     let data = props.location.data ? props.location.data : products;
     console.log(`data:${JSON.stringify(data)}`);
   
     return <Accordion defaultActiveKey="0">{list}</Accordion>;
   };
+  */
   
   const useDataApi = (initialUrl, initialData) => {
     const { useState, useEffect, useReducer } = React;
@@ -128,31 +134,40 @@ const products = [
       let n = index + 1049;
       let uhit = "https://picsum.photos/" + n;
       return (
-        <li key={index}>
-          <Image src={uhit} width={70} roundedCircle></Image>
-          <Button variant="primary" size="large">
-            {item.name}:${item.cost}-Stock={item.instock}
-          </Button>
-          <input name={item.name} type="submit" onClick={addToCart}></input>
-        </li>
+        
+        <Card style={{border:'none'}} key={index}>
+          <Container>
+          <Row className="align-items-center">
+            <Col xs lg="3">
+              <Image src={uhit} width={70} roundedCircle></Image>
+            </Col>
+            <Col md="auto">
+                  <Button variant="light" size="large">
+                    {item.name} $ {item.cost} Stock={item.instock}
+                  </Button>
+                  <br />
+                  <Button variant="primary" id='cart-button' size="large" name={item.name} onClick={addToCart}>Submit</Button>
+            </Col>
+          </Row>
+          </Container>
+        </Card>
       );
     });
     let cartList = cart.map((item, index) => {
       return (
         <Accordion key={index}>
-            <Accordion.Item variant="link" eventKey={1 + index}>
-                <Accordion.Header>
-                    {item.name}
-                </Accordion.Header>
-                <Accordion.Body
-                    onClick={() => deleteCartItem(index)}
-                    eventKey={1 + index}
-                >
-                    <Card.Body>
-                    $ {item.cost} from {item.country}
-                    </Card.Body>
-            </Accordion.Body>
-            </Accordion.Item>
+          <Accordion.Item variant="link" eventKey={1 + index}>
+              <Accordion.Header>
+                <strong>{item.name}</strong> (1 piece)
+              </Accordion.Header>
+              <Accordion.Body
+                  onClick={() => deleteCartItem(index)}
+                  eventKey={1 + index}
+              >
+                  $ {item.cost} from {item.country} 
+                  <CloseButton  />
+              </Accordion.Body>
+          </Accordion.Item>
         </Accordion>
       );
     });
@@ -162,7 +177,7 @@ const products = [
       let final = cart.map((item, index) => {
         return (
           <div key={index} index={index}>
-            {item.name}
+            {item.name} $ {item.cost}
           </div>
         );
       });
@@ -187,37 +202,43 @@ const products = [
     };
   
     return (
-      <Container>
-        <Row>
-          <Col>
-            <h1>Product List</h1>
-            <ul style={{ listStyleType: "none" }}>{list}</ul>
+      <Container id='cart-container' >
+        <h1><strong>React Shopping Cart</strong></h1>
+        <h5>See how we restock products!</h5>
+        <Row id='cart-row'>
+          <Col id='cart-col'>
+            <h3>Product List</h3>
+            <ul>{list}</ul>
           </Col>
-          <Col>
-            <h1>Cart Contents</h1>
+          <Col id='cart-col'>
+            <h3>Cart Contents</h3>
             <Accordion>{cartList}</Accordion>
           </Col>
-          <Col>
-            <h1>CheckOut </h1>
-            <Button onClick={checkOut}>CheckOut $ {finalList().total}</Button>
-            <div> {finalList().total > 0 && finalList().final} </div>
+          <Col id='cart-col'>
+            <h3>CheckOut </h3>
+            <Card>
+              <Button variant="light" onClick={checkOut}><strong>CheckOut $ {finalList().total}</strong></Button>
+              <ul>{finalList().total > 0 && finalList().final}</ul>
+            </Card>
           </Col>
         </Row>
         <Row>
-          <form
+          <Form
             onSubmit={(event) => {
               restockProducts(`http://localhost:1337/api/${query}`);
               console.log(`Restock called on ${query}`);
               event.preventDefault();
             }}
           >
-            <input
-              type="text"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-            />
-            <button type="submit">ReStock Products</button>
-          </form>
+            <Col sm="3">
+              <Form.Control
+                type="text"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+              />
+              <Button id='cart-button'>ReStock Products</Button>
+            </Col>
+          </Form>
         </Row>
       </Container>
     );
